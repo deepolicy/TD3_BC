@@ -55,6 +55,7 @@ if __name__ == "__main__":
     # TD3 + BC
     parser.add_argument("--alpha", default=2.5)
     parser.add_argument("--normalize", default=True)
+    parser.add_argument("--data_path", default="../TD3_BC.data")
     args = parser.parse_args()
 
     file_name = f"{args.policy}_{args.env}_{args.seed}"
@@ -62,11 +63,11 @@ if __name__ == "__main__":
     print(f"Policy: {args.policy}, Env: {args.env}, Seed: {args.seed}")
     print("---------------------------------------")
 
-    if not os.path.exists("./results"):
-        os.makedirs("./results")
+    if not os.path.exists(f"{args.data_path}/results"):
+        os.makedirs(f"{args.data_path}/results")
 
-    if args.save_model and not os.path.exists("./models"):
-        os.makedirs("./models")
+    if args.save_model and not os.path.exists(f"{args.data_path}/models"):
+        os.makedirs(f"{args.data_path}/models")
 
     env = gym.make(args.env)
 
@@ -99,7 +100,7 @@ if __name__ == "__main__":
 
     if args.load_model != "":
         policy_file = file_name if args.load_model == "default" else args.load_model
-        policy.load(f"./models/{policy_file}")
+        policy.load(f"{args.data_path}/models/{policy_file}")
 
     replay_buffer = utils.ReplayBuffer(state_dim, action_dim)
     replay_buffer.convert_D4RL(d4rl.qlearning_dataset(env))
@@ -115,5 +116,5 @@ if __name__ == "__main__":
         if (t + 1) % args.eval_freq == 0:
             print(f"Time steps: {t+1}")
             evaluations.append(eval_policy(policy, args.env, args.seed, mean, std))
-            np.save(f"../TD3_BC.data/results/{file_name}", evaluations)
-            if args.save_model: policy.save(f"../TD3_BC.data/models/{file_name}")
+            np.save(f"{args.data_path}/results/{file_name}", evaluations)
+            if args.save_model: policy.save(f"{args.data_path}/models/{file_name}")
