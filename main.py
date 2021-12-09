@@ -12,7 +12,7 @@ import TD3_BC
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
 def eval_policy(policy, env_name, seed, mean, std, seed_offset=100, eval_episodes=10):
-    eval_env = gym.make(env_name)
+    eval_env = d4rl.make(env_name)
     eval_env.seed(seed + seed_offset)
 
     avg_reward = 0.
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Experiment
     parser.add_argument("--policy", default="TD3_BC")               # Policy name
-    parser.add_argument("--env", default="hopper-medium-v0")        # OpenAI gym environment name
+    parser.add_argument("--env", default="Hopper-v2")        # OpenAI gym environment name
     parser.add_argument("--seed", default=0, type=int)              # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--eval_freq", default=5e3, type=int)       # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=int)   # Max time steps to run environment
@@ -115,5 +115,5 @@ if __name__ == "__main__":
         if (t + 1) % args.eval_freq == 0:
             print(f"Time steps: {t+1}")
             evaluations.append(eval_policy(policy, args.env, args.seed, mean, std))
-            np.save(f"./results/{file_name}", evaluations)
-            if args.save_model: policy.save(f"./models/{file_name}")
+            np.save(f"../TD3_BC.data/results/{file_name}", evaluations)
+            if args.save_model: policy.save(f"../TD3_BC.data/models/{file_name}")
