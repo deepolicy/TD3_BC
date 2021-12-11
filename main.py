@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import torch
 import gym
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     # Experiment
     parser.add_argument("--policy", default="TD3_BC")               # Policy name
     parser.add_argument("--env", default="Hopper-v2")        # OpenAI gym environment name
-    parser.add_argument("--seed", default=0, type=int)              # Sets Gym, PyTorch and Numpy seeds
+    parser.add_argument("--seed", default=1, type=int)              # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--eval_freq", default=5e3, type=int)       # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=int)   # Max time steps to run environment
     parser.add_argument("--save_model", action="store_true")        # Save model and optimizer parameters
