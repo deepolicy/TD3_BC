@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 
-
 class ReplayBuffer(object):
     def __init__(self, state_dim, action_dim, max_size=int(1e6)):
         self.max_size = max_size
@@ -55,3 +54,16 @@ class ReplayBuffer(object):
         self.state = (self.state - mean)/std
         self.next_state = (self.next_state - mean)/std
         return mean, std
+
+def plot(path):
+    from matplotlib import pyplot as plt 
+    data = np.load(path)
+    plt.plot(data)
+    plt.savefig(f'{path}.png')
+    plt.clf()
+
+def main():
+    plot('../TD3_BC.data/results/TD3_BC_Hopper-v2_0.npy')
+
+if __name__ == '__main__':
+    main()

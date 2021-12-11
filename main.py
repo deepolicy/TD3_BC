@@ -7,7 +7,7 @@ import d4rl
 
 import utils
 import TD3_BC
-
+from utils import plot
 
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
@@ -58,6 +58,8 @@ if __name__ == "__main__":
     parser.add_argument("--data_path", default="../TD3_BC.data")
     args = parser.parse_args()
 
+    args.env = 'LunarLanderContinuous-v2'
+
     file_name = f"{args.policy}_{args.env}_{args.seed}"
     print("---------------------------------------")
     print(f"Policy: {args.policy}, Env: {args.env}, Seed: {args.seed}")
@@ -103,7 +105,8 @@ if __name__ == "__main__":
         policy.load(f"{args.data_path}/models/{policy_file}")
 
     replay_buffer = utils.ReplayBuffer(state_dim, action_dim)
-    replay_buffer.convert_D4RL(d4rl.qlearning_dataset(env))
+    # replay_buffer.convert_D4RL(d4rl.qlearning_dataset(env))
+    replay_buffer.convert_D4RL(d4rl.load_data())
     if args.normalize:
         mean,std = replay_buffer.normalize_states() 
     else:
@@ -117,4 +120,5 @@ if __name__ == "__main__":
             print(f"Time steps: {t+1}")
             evaluations.append(eval_policy(policy, args.env, args.seed, mean, std))
             np.save(f"{args.data_path}/results/{file_name}", evaluations)
+            plot(f"{args.data_path}/results/{file_name}.npy")
             if args.save_model: policy.save(f"{args.data_path}/models/{file_name}")
