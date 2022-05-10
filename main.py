@@ -4,6 +4,7 @@ import torch
 import gym
 import argparse
 import os
+from matplotlib import pyplot as plt
 import d4rl
 
 import utils
@@ -113,9 +114,15 @@ if __name__ == "__main__":
     else:
         mean,std = 0,1
     
+    actor_loss_list, critic_loss_list = [], []
     evaluations = []
     for t in range(int(args.max_timesteps)):
-        policy.train(replay_buffer, args.batch_size)
+        actor_loss, critic_loss = policy.train(replay_buffer, args.batch_size)
+
+        if not actor_loss == '':
+            actor_loss_list.append(actor_loss)
+        critic_loss_list.append(critic_loss)
+
         # Evaluate episode
         if (t + 1) % args.eval_freq == 0:
             print(f"Time steps: {t+1}")
@@ -123,3 +130,11 @@ if __name__ == "__main__":
             np.save(f"{args.data_path}/results/{file_name}", evaluations)
             plot(f"{args.data_path}/results/{file_name}.npy")
             if args.save_model: policy.save(f"{args.data_path}/models/{file_name}")
+
+            plt.plot(actor_loss_list)
+            plt.savefig(f'{args.data_path}/results/actor_loss_list3.png')
+            plt.clf()
+
+            plt.plot(critic_loss_list)
+            plt.savefig(f'{args.data_path}/results/critic_loss_list3.png')
+            plt.clf()
